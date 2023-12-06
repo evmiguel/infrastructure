@@ -45,3 +45,9 @@ variable "instance_type" {
   description = "Default instance type for EC2 instance"
   default     = "t2.micro"
 }
+
+variable "ssh_cidrs" {
+  type = list(string)
+  description = "Default values for SSH"
+  default = [ "0.0.0.0/0" ]
+}
