@@ -4,6 +4,18 @@ variable "region" {
   default     = "us-east-1"
 }
 
+variable "vpc_name" {
+  type        = string
+  description = "Default name of VPC"
+  default     = "erika-vpc"
+}
+
+variable "cidr" {
+  type        = string
+  description = "Default CIDR block"
+  default     = "10.0.0.0/16"
+}
+
 variable "availability_zones" {
   type        = list(string)
   description = "Availability zone values"
