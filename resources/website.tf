@@ -3,7 +3,13 @@ resource "aws_security_group" "site_security_group" {
   description = "Allow HTTP and HTTPS traffic"
   vpc_id      = module.vpc.vpc_id
 
-  # Add SSH rule
+  ingress {
+    description = "SSH traffic"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = var.ssh_cidrs
+  }
 
   ingress {
     description = "HTTPS traffic"
