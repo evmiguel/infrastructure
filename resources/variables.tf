@@ -33,3 +33,15 @@ variable "public_subnets" {
   description = "List of public subnets"
   default     = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
 }
+
+variable "ami" {
+  type        = string
+  description = "Default AMI for EC2 instances"
+  default     = "ami-0fc5d935ebf8bc3bc"
+}
+
+variable "instance_type" {
+  type        = string
+  description = "Default instance type for EC2 instance"
+  default     = "t2.micro"
+}
