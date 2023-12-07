@@ -56,3 +56,8 @@ resource "aws_instance" "site" {
     Terraform = true
   }
 }
+
+resource "local_file" "ansible_inventory" {
+  filename = "../configuration/inventory.ini"
+  content = "[site]\n${ aws_instance.site.public_ip }"
+}

@@ -1,0 +1,63 @@
+---
+- name: Deploy site with Docker Compose
+  hosts: site
+  remote_user: ubuntu
+  become: yes
+  vars:
+    rerun: false
+  tasks:
+    - name: Install aptitude
+      apt:
+        name: aptitude
+        state: latest
+        update_cache: true
+
+    - name: Install required system packages
+      apt:
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - python3-pip
+          - virtualenv
+          - python3-setuptools
+          - docker.io
+        state: present
+        update_cache: true
+
+    - name: Install Python modules
+      pip:
+        name: ['docker', 'pyyaml', 'docker-compose']
+        state: present
+
+    - name: Copy Docker Compose files
+      ansible.builtin.copy:
+        src: site
+        dest: /root/
+
+    - name: Tear down existing services
+      community.docker.docker_compose:
+        project_src: /root/site
+        state: absent
+      when: rerun
+
+    - name: Create and start services
+      community.docker.docker_compose:
+        project_src: /root/site
+      when: rerun
+      register: output
+
+    - name: Show results
+      ansible.builtin.debug:
+        var: output
+      when: rerun
+
+    - name: Auto-renew certificates
+      ansible.builtin.cron:
+        name: "Renew certificates"
+        minute: "0"
+        hour: "5"
+        day: "1"
+        month: "*/2"
+        job: "/usr/local/bin/docker-compose -f /root/site/docker-compose.yaml up certbot"
